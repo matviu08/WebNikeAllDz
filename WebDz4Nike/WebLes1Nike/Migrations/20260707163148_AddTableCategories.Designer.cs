@@ -12,7 +12,7 @@ using WebLes1Nike.Data;
 namespace WebLes1Nike.Migrations
 {
     [DbContext(typeof(NikeDbContext))]
-    [Migration("20260630173003_AddTableCategories")]
+    [Migration("20260707163148_AddTableCategories")]
     partial class AddTableCategories
     {
         /// <inheritdoc />

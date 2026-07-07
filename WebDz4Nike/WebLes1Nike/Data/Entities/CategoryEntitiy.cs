@@ -16,5 +16,6 @@ namespace WebLes1Nike.Data.Entities
         public string Slug { get; set; } = null!;
         public bool isDeleted { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public ICollection<ProductEntity> Products { get; set; } = null!;
     }
 }

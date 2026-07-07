@@ -5,9 +5,11 @@ namespace WebLes1Nike.Data;
 
 public class NikeDbContext : DbContext
 {
-    public NikeDbContext(DbContextOptions<NikeDbContext> options) 
+    public NikeDbContext(DbContextOptions<NikeDbContext> options)
         : base(options)
     { }
 
     public DbSet<CategoryEntitiy> Categories { get; set; }
+    public DbSet<ProductEntity> Products { get; set; }
+    public DbSet<ProductImageEntity> ProductImages { get; set; }
 }
