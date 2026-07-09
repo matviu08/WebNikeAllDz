@@ -4,7 +4,6 @@ using WebLes1Nike.Data;
 using WebLes1Nike.Data.Entities;
 using WebLes1Nike.Interfaces;
 using WebLes1Nike.Models.Category;
-using WebLes1Nike.Services;
 
 namespace WebLes1Nike.Controllers;
 

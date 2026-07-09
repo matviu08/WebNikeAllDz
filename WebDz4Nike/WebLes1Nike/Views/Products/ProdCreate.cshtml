@@ -1,0 +1,184 @@
+﻿@model WebLes1Nike.Models.Product.CreateProductViewModel
+
+<h1 class="text-center mb-5 fw-bold">Створити товар</h1>
+<div class="row">
+    <form asp-action="ProdCreate" id="crateProductForm" method="post" class="col-md-8 offset-md-2">
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Назва товар</label>
+            <input asp-for="Name" class="form-control">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Slug" class="form-label">Slug (URL)</label>
+            <input asp-for="Slug" class="form-control">
+            <span asp-validation-for="Slug" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="CategoryName" class="form-label">Категорія</label>
+            <span asp-validation-for="CategoryName" class="text-danger"></span>
+            @{
+                var categories = ViewBag.Categories;
+            }
+            <select class="form-select" asp-for="CategoryName">
+                @foreach (var catName in categories)
+                {
+                    <option value="@catName">@catName</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Price" class="form-label">Ціна</label>
+            <input asp-for="Price" class="form-control" type="number" step="0.01">
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label">Опис</label>
+            <textarea asp-for="Description" class="form-control" 
+            rows="4" placeholder="Введіть опис товару"></textarea>
+        </div>
+
+        
+        <label asp-for="Images" class="form-label">Зображення</label>
+        <div class="mb-3 border border-success border-dashed p-4 rounded text-center position-relative">
+            <input type="file" 
+                id="fileInput" 
+                class="position-absolute top-0 start-0 w-100 h-100 opacity-0" 
+                accept="image/*" 
+                multiple 
+                style="cursor: pointer;"/>
+            <span class="text-muted">Натисніть і виберіть фото</span>
+        </div>
+
+        <div id="imageList" class="col-12 row row-cols-2 row-cols-md-4 g-3 mt-2"></div>
+
+        <button type="submit" class="btn btn-primary mt-3">Додати товар</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/slugify@1.6.9/slugify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/qi9dvz7coxfyfveb7aiv8mfheldf1yt622fk44ecfe2zh1ru/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+
+    <script>
+        tinymce.init({
+        selector: '#Description',
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded',() => {
+            new Sortable(document.getElementById("imageList"),
+            {
+                animation: 150,
+                onEnd: renumberBadges
+            });
+
+            const fileInput = document.getElementById("fileInput");
+            const imageList = document.getElementById("imageList");
+
+            fileInput.addEventListener("change",(e) => {
+                const files = e.target.files;
+                Array.from(files).forEach(file=>{
+                    if(!file.type.startsWith('image/'))
+                        return;
+                    const col = document.createElement('div');
+                    col.className = 'col';
+
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'position-relative';
+                    wrapper.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center bg-light rounded border" style="height:100px;">
+                        <div class="spinner-border spinner-border-sm text-secondary" role="status"></div>
+                    </div>`;
+            
+                    col.appendChild(wrapper);
+                    imageList.appendChild(col);
+
+                    const reader = new FileReader();
+                    reader.onload = (e)=>{
+                        wrapper.innerHTML = '';
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'img-fluid rounded border w-100';
+                        img.style.height = '100px';
+                        img.style.cursor = 'grab';
+                        img.style.objectFit = 'cover';
+                        img.alt = file.name;
+                        img.title = file.name;
+
+                        const badge = document.createElement('span');
+                        badge.className = 'badge bg-dark position-absolute bottom-0 start-0 m-1 priority-badge';
+
+                        const removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle';
+                        removeBtn.innerHTML = '&times;';
+                        removeBtn.setAttribute('aria-label', 'Видалити фото');
+                        removeBtn.addEventListener('click', () => {
+                            col.remove();
+                            renumberBadges();
+                        });
+
+                        wrapper.appendChild(img);
+                        wrapper.appendChild(badge);
+                        wrapper.appendChild(removeBtn);
+
+                        renumberBadges();
+                    };
+
+                    reader.readAsDataURL(file);
+                });
+
+                fileInput.value = "";
+            });
+
+            function renumberBadges() {
+                imageList.querySelectorAll('.priority-badge').forEach((badge, index) => {
+                    badge.textContent = index + 1;
+                });
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", ()=> {
+        const createProductForm = document.getElementById("crateProductForm");
+            createProductForm.addEventListener("submit", (e)=>{
+                createProductForm.querySelectorAll('input[name^="Images"]').forEach(el => el.remove());
+
+                const imgs = imageList.querySelectorAll('img');
+                imgs.forEach((img,index) => {
+                    const hiddenName = document.createElement('input');
+                    hiddenName.type = 'hidden';
+                    hiddenName.name = `Images[${index}].Base64Image`;
+                    hiddenName.value = img.src; 
+                    createProductForm.appendChild(hiddenName);
+
+                    const hiddenPriority = document.createElement('input');
+                    hiddenPriority.type = 'hidden';
+                    hiddenPriority.name = `Images[${index}].Priority`;
+                    hiddenPriority.value = index;
+                    createProductForm.appendChild(hiddenPriority);
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const Name = document.getElementById("Name");
+            const Slug = document.getElementById("Slug");
+            Name.addEventListener("input", () => {
+                Slug.value = slugify(Name.value, {
+                    lower: true,
+                    strict: true,
+                    trim: true
+                });
+            });
+        });
+    </script>
+
+}

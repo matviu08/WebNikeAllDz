@@ -2,7 +2,7 @@
 
 namespace WebLes1Nike.Models.Product
 {
-    public class CrateProductViewModel
+    public class CreateProductViewModel
     {
         [Required(ErrorMessage = "Необхідно вказати назву продукту")]
         [Display(Name = "Назва продукту")]
@@ -19,6 +19,6 @@ namespace WebLes1Nike.Models.Product
         [Required(ErrorMessage = "Необхідно вказати категорію продукту")]
         [Display(Name = "Категорія продукту")]
         public string CategoryName { get; set; } = null!;
-        public List<CrateProductImageViewModel> Images { get; set; } = null!;
+        public List<CreateProductImageViewModel> Images { get; set; } = null!;
     }
 }

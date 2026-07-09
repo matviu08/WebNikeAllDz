@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using WebHike.Services;
 using WebLes1Nike.Data;
 using WebLes1Nike.Interfaces;
-using WebLes1Nike.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

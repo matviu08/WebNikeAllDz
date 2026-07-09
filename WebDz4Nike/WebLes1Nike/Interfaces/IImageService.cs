@@ -11,7 +11,7 @@
         /// <param name="folderPath">Абсолютний шлях до папки, куди зберігати (напр. wwwroot/images)</param>
         /// <returns>Ім'я збереженого файлу (без шляху)</returns>
         Task<string> SaveOptimizedImageAsync(IFormFile file, string folderPath);
-
+        Task<string> SaveOptimizedImageAsync(string base64Image, string folderPath);
         Task RemoveImageAsync(string imageName, string folderPath);
 
     }
