@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebLes1Nike.Data;
 using WebLes1Nike.Data.Entities;
 using WebLes1Nike.Interfaces;
@@ -10,7 +11,11 @@ namespace WebLes1Nike.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            var products = nikeDbContext.Products
+                .Include(x => x.Category)
+                .Include(x => x.ProductImages)
+                .ToList();
+            return View(products);
         }
         [HttpGet]
         public IActionResult ProdCreate()
