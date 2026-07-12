@@ -1,0 +1,181 @@
+﻿@model ProductDetailViewModel
+
+@{
+    ViewData["Title"] = Model?.Name;
+    var mainImage = Model?.Images.FirstOrDefault() ?? "no-image";
+}
+
+@if (Model == null)
+{
+    <div class="container py-5 text-center">
+        <h2>Товар не знайдено</h2>
+        <a asp-action="Index" asp-controller="Products" class="btn btn-dark mt-3">
+            ← Назад
+        </a>
+    </div>
+}
+else
+{
+    <div class="container">
+        <nav class="mb-4">
+            <a asp-action="Index" asp-controller="Products" class="text-decoration-none text-secondary">
+                ← До списку товарів
+            </a>
+        </nav>
+
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-7">
+                <div class="bg-light rounded-4 shadow-sm p-4">
+                    <img id="mainImage"
+                         src="@($"/images/{mainImage}_1200.webp")"
+                         class="img-fluid w-100 rounded-3"
+                         style="object-fit:contain; max-height:600px;" />
+
+                </div>
+
+                @if (Model.Images.Count > 1)
+                {
+                    <div class="d-flex gap-3 mt-4 flex-wrap">
+                        @for (int i = 0; i < Model.Images.Count; i++)
+                        {
+                            <img src="@($"/images/{Model.Images[i]}_1200.webp")"
+                                 class="thumb-item rounded-3 border @(i == 0 ? "border-dark" : "border-light")"
+                                 data-index="@i"
+                                 style="width:90px;height:90px;cursor:pointer;object-fit:cover;" />
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="col-lg-5">
+
+                <div class="sticky-top" style="top:90px;">
+
+                    <span class="badge bg-dark mb-3 fs-6">
+                        @Model.CategoryName
+                    </span>
+                    <h1 class="fw-bold display-6 mb-3">
+                        @Model.Name
+                    </h1>
+                    <h2 class="fw-bold text-success mb-4">
+                        @Model.Price ₴
+                    </h2>
+
+                    <div class="bg-light rounded-4 p-4 mb-4 shadow-sm">
+                        <h5 class="fw-bold mb-3">
+                            Опис товару
+                        </h5>
+                        <p class="text-secondary mb-0"
+                           style="white-space:pre-line;">
+                            @Html.Raw(Model.Description)
+                        </p>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="border rounded-4 p-3 text-center">
+                                <div class="fw-bold">
+                                    Категорія
+                                </div>
+                                <div class="text-secondary">
+                                    @Model.CategoryName
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="border rounded-4 p-3 text-center">
+                                <div class="fw-bold">
+                                    Статус
+                                </div>
+                                <div class="text-success">
+                                    В наявності
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="d-grid gap-3">
+                        <a asp-action="ProdEdit"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-dark btn-lg rounded-pill">
+                            Редагувати товар
+                        </a>
+                        <a asp-action="ProdDelete"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-outline-danger btn-lg rounded-pill">
+                            Видалити товар
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        (() => {
+            const images=@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Images ?? new List<string>()));
+            if(images.length<2)
+                return;
+
+            let current=0;
+            const main=document.getElementById("mainImage");
+            const thumbs=document.querySelectorAll(".thumb-item");
+
+            function show(i){
+                current=i;
+                main.src=`/images/${images[current]}_1200.webp`;
+                thumbs.forEach((t,index)=>{
+                    t.classList.toggle("border-dark",index==current);
+                    t.classList.toggle("border-light",index!=current);
+                });
+
+            }
+
+            thumbs.forEach(t=>{
+                t.onclick=()=>{
+                    show(Number(t.dataset.index));
+                }
+            });
+        })();
+    </script>
+}
+
+@* @section Scripts {
+    <script>
+        (function () {
+            const images = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Images ?? new List<string>()));
+            if (images.length <= 1) return;
+
+            let current = 0;
+            const mainImg = document.getElementById('mainImage');
+            const counter = document.getElementById('imgCounter');
+            const thumbs  = document.querySelectorAll('.thumb-item');
+
+            function goTo(i) {
+                current = (i + images.length) % images.length;
+                mainImg.src = `/images/${images[current]}_1200.webp`;
+                counter.textContent = `${current + 1} / ${images.length}`;
+                thumbs.forEach((t, idx) => {
+                    t.style.opacity = idx === current ? '1' : '0.6';
+                    t.classList.toggle('border-primary', idx === current);
+                });
+            }
+
+            document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+            document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+            thumbs.forEach(t => t.addEventListener('click', () => goTo(+t.dataset.index)));
+
+            // свайп на мобільних
+            let startX = 0;
+            mainImg.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+            mainImg.addEventListener('touchend', e => {
+                const diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+            });
+        })();
+    </script>
+} *@

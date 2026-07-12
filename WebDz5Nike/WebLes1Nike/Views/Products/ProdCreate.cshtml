@@ -1,4 +1,4 @@
-﻿@model WebLes1Nike.Models.Product.CreateProductViewModel
+﻿@model CreateProductViewModel
 
 <h1 class="text-center mb-5 fw-bold">Створити товар</h1>
 <div class="row">
@@ -159,7 +159,7 @@
 
                     const hiddenPriority = document.createElement('input');
                     hiddenPriority.type = 'hidden';
-                    hiddenPriority.name = `Images[${index}].Priority`;
+                    hiddenPriority.name = `Images[${index}].Order`;
                     hiddenPriority.value = index;
                     createProductForm.appendChild(hiddenPriority);
                 });

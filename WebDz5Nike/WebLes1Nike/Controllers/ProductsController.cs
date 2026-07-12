@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using WebLes1Nike.Data;
 using WebLes1Nike.Data.Entities;
 using WebLes1Nike.Interfaces;
@@ -11,11 +12,20 @@ namespace WebLes1Nike.Controllers
     {
         public IActionResult Index()
         {
-            var products = nikeDbContext.Products
-                .Include(x => x.Category)
-                .Include(x => x.ProductImages)
-                .ToList();
-            return View(products);
+            List<ProductItemViewModel> model = nikeDbContext.Products
+                .Select(x => new ProductItemViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Price = x.Price.ToString("C", new CultureInfo("uk-UA")),
+                    CategoryName = x.Category.Name,
+                    Images = x.ProductImages
+                        .OrderBy(x=> x.Order)
+                        .Select(x=>x.Name)
+                        .Take(2)
+                        .ToList()
+                }).ToList();
+            return View(model);
         }
         [HttpGet]
         public IActionResult ProdCreate()
@@ -30,12 +40,14 @@ namespace WebLes1Nike.Controllers
             if ((ModelState.IsValid))
             {
                 var cat = nikeDbContext.Categories.SingleOrDefault(x => x.Name == model.CategoryName);
+                string priceStr = model.Price.ToString().Trim().Replace('.', ',');
+                decimal price = Decimal.Parse(priceStr, new CultureInfo("uk-UA"));
                 var entity = new ProductEntity
                 {
                     Name = model.Name,
                     CategoryId = cat.Id,
                     Description = model.Description,
-                    Price = 0.0M,
+                    Price = price,
                     Slug = model.Slug,
                 };
                 string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
@@ -55,6 +67,24 @@ namespace WebLes1Nike.Controllers
             }
             ViewBag.Categories = nikeDbContext
                 .Categories.Select(x => x.Name).ToList();
+            return View(model);
+        }
+
+        public IActionResult Details(int id)
+        {
+            ProductDetailViewModel? model = nikeDbContext.Products
+                .Select(x => new ProductDetailViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Price = x.Price.ToString("C", new CultureInfo("uk-UA")),
+                    CategoryName = x.Category.Name,
+                    Description = x.Description ?? String.Empty,
+                    Images = x.ProductImages
+                        .OrderBy(x => x.Order)
+                        .Select(x => x.Name)
+                        .ToList()
+                }).SingleOrDefault(x => x.Id == id);
             return View(model);
         }
     }

@@ -12,6 +12,7 @@ namespace WebLes1Nike.Models.Product
         public string? Description { get; set; } = String.Empty;
         [Required(ErrorMessage = "Необхідно вказати ціну продукту")]
         [Display(Name = "Ціна продукту")]
+        [DataType(DataType.Currency)]
         public string Price { get; set; } = null!;
         [Required(ErrorMessage = "Необхідно вказати URL продукту")]
         [Display(Name = "URL продукту")]
