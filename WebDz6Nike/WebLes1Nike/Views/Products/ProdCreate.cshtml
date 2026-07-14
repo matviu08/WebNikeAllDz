@@ -33,19 +33,19 @@
         </div>
         <div class="mb-3">
             <label asp-for="Description" class="form-label">Опис</label>
-            <textarea asp-for="Description" class="form-control" 
-            rows="4" placeholder="Введіть опис товару"></textarea>
+            <textarea asp-for="Description" class="form-control"
+                      rows="4" placeholder="Введіть опис товару"></textarea>
         </div>
 
-        
+
         <label asp-for="Images" class="form-label">Зображення</label>
         <div class="mb-3 border border-success border-dashed p-4 rounded text-center position-relative">
-            <input type="file" 
-                id="fileInput" 
-                class="position-absolute top-0 start-0 w-100 h-100 opacity-0" 
-                accept="image/*" 
-                multiple 
-                style="cursor: pointer;"/>
+            <input type="file"
+                   id="fileInput"
+                   class="position-absolute top-0 start-0 w-100 h-100 opacity-0"
+                   accept="image/*"
+                   multiple
+                   style="cursor: pointer;"/>
             <span class="text-muted">Натисніть і виберіть фото</span>
         </div>
 
@@ -58,31 +58,32 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/slugify@1.6.9/slugify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
-    <script src="https://cdn.tiny.cloud/1/qi9dvz7coxfyfveb7aiv8mfheldf1yt622fk44ecfe2zh1ru/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+    <script src="https://cdn.tiny.cloud/1/qi9dvz7coxfyfveb7aiv8mfheldf1yt622fk44ecfe2zh1ru/tinymce/8/tinymce.min.js"
+            referrerpolicy="origin" crossorigin="anonymous"></script>
 
     <script>
         tinymce.init({
-        selector: '#Description',
-        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            selector: '#Description',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
         });
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded',() => {
+        document.addEventListener('DOMContentLoaded', () => {
             new Sortable(document.getElementById("imageList"),
-            {
-                animation: 150,
-                onEnd: renumberBadges
-            });
+                {
+                    animation: 150,
+                    onEnd: renumberBadges
+                });
 
             const fileInput = document.getElementById("fileInput");
             const imageList = document.getElementById("imageList");
 
-            fileInput.addEventListener("change",(e) => {
+            fileInput.addEventListener("change", (e) => {
                 const files = e.target.files;
-                Array.from(files).forEach(file=>{
-                    if(!file.type.startsWith('image/'))
+                Array.from(files).forEach(file => {
+                    if (!file.type.startsWith('image/'))
                         return;
                     const col = document.createElement('div');
                     col.className = 'col';
@@ -93,12 +94,12 @@
                     <div class="d-flex align-items-center justify-content-center bg-light rounded border" style="height:100px;">
                         <div class="spinner-border spinner-border-sm text-secondary" role="status"></div>
                     </div>`;
-            
+
                     col.appendChild(wrapper);
                     imageList.appendChild(col);
 
                     const reader = new FileReader();
-                    reader.onload = (e)=>{
+                    reader.onload = (e) => {
                         wrapper.innerHTML = '';
                         const img = document.createElement('img');
                         img.src = e.target.result;
@@ -144,17 +145,17 @@
     </script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", ()=> {
-        const createProductForm = document.getElementById("crateProductForm");
-            createProductForm.addEventListener("submit", (e)=>{
+        document.addEventListener("DOMContentLoaded", () => {
+            const createProductForm = document.getElementById("crateProductForm");
+            createProductForm.addEventListener("submit", (e) => {
                 createProductForm.querySelectorAll('input[name^="Images"]').forEach(el => el.remove());
 
                 const imgs = imageList.querySelectorAll('img');
-                imgs.forEach((img,index) => {
+                imgs.forEach((img, index) => {
                     const hiddenName = document.createElement('input');
                     hiddenName.type = 'hidden';
                     hiddenName.name = `Images[${index}].Base64Image`;
-                    hiddenName.value = img.src; 
+                    hiddenName.value = img.src;
                     createProductForm.appendChild(hiddenName);
 
                     const hiddenPriority = document.createElement('input');

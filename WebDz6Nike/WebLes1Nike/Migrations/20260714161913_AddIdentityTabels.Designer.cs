@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebLes1Nike.Data;
@@ -11,9 +12,11 @@ using WebLes1Nike.Data;
 namespace WebLes1Nike.Migrations
 {
     [DbContext(typeof(NikeDbContext))]
-    partial class NikeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260714161913_AddIdentityTabels")]
+    partial class AddIdentityTabels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
