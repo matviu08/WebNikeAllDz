@@ -94,13 +94,19 @@ else
                     </div>
 
                     <div class="d-grid gap-3">
+                        <a asp-controller="Cart"
+                           asp-action="Index"
+                           class="btn btn-success btn-lg rounded-pill py-3 fw-bold">
+                            Додати в кошик
+                        </a>
                         <a asp-action="ProdEdit"
                            asp-route-id="@Model.Id"
                            class="btn btn-dark btn-lg rounded-pill">
                             Редагувати товар
                         </a>
                         <button type="button"
-                                data-bs-toggle="modal" data-bs-target="#confirmDeleteProduct"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteProduct"
                                 class="btn btn-outline-danger btn-lg rounded-pill">
                             Видалити товар
                         </button>

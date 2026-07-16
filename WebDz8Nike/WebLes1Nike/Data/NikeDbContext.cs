@@ -28,5 +28,6 @@ public class NikeDbContext : IdentityDbContext<UserEntity, RoleEntity, int>
             .HasOne(ur => ur.Role)
             .WithMany(r => r.UsersRoles)
             .HasForeignKey(ur => ur.RoleId);
+        
     }
 }
