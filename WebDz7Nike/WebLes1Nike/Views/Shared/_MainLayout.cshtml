@@ -51,9 +51,25 @@
                             </svg>
                         </button>
                     </form>
-                    <a asp-action="Login" asp-controller="Account" class="btn btn-dark rounded-pill px-4">
-                        Увійти
-                    </a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @using (Html.BeginForm("Logout", "Account", FormMethod.Post))
+                        {
+                            <div class="px-4">
+                                <button class="btn btn-dark rounded-pill ">
+                                    @User.Identity.Name
+                                    Вихід
+                                </button>
+                            </div>
+                            
+                        }
+                    }
+                    else
+                    {
+                        <a asp-action="Login" asp-controller="Account" class="btn btn-dark rounded-pill px-4">
+                            Увійти
+                        </a>
+                    }
                 </div>
             </div>
         </nav>
@@ -63,6 +79,7 @@
         @RenderBody()
     </main>
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)

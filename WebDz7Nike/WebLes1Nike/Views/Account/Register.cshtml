@@ -104,13 +104,8 @@
             imageInput.addEventListener("change", (e) => {
                 const file = e.target.files[0];
                 if (!file || !file.type.startsWith("image/")) return;
-
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    cropperImage.src = ev.target.result;
-                    cropModal.show();
-                };
-                reader.readAsDataURL(file);
+                cropperImage.src = URL.createObjectURL(file);
+                cropModal.show();
             });
 
             cropModalEl.addEventListener("shown.bs.modal", () => {
@@ -123,27 +118,18 @@
                 });
             });
 
-            cropModalEl.addEventListener("hidden.bs.modal", () => {
-                if (cropper) {
-                    cropper.destroy();
-                    cropper = null;
-                }
-            });
-
             cropConfirmBtn.addEventListener("click", () => {
                 if (!cropper) return;
 
                 const canvas = cropper.getCroppedCanvas({
-                    width: 400,
-                    height: 400
+                    @*width: 400,
+                    height: 400*@
                 });
 
                 canvas.toBlob((blob) => {
-                    const croppedFile = new File([blob], "avatar.png", { type: "image/png" });
-
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(croppedFile);
-                    imageInput.files = dataTransfer.files;
+                    const dt = new DataTransfer();
+                    dt.items.add(new File([blob], "avatar.png", { type: "image/png" }));
+                    imageInput.files = dt.files;
 
                     croppedPreview.src = canvas.toDataURL("image/png");
                     croppedPreviewWrapper.classList.remove("d-none");
