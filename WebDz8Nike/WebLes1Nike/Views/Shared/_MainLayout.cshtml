@@ -72,34 +72,7 @@
                     </a>
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <div class="dropdown">
-                            <a href="#"
-                               class="d-flex align-items-center text-decoration-none"
-                               id="userMenuToggle"
-                               role="button"
-                               data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                <img src="/images/@(currentUser?.Image)_64.webp"
-                                     onerror="this.onerror=null;this.src='/images/default.jpg';"
-                                     alt="@currentUser?.FirstName"
-                                     class="rounded-circle border border-secondary profile-hover-effect"
-                                     width="40" height="40"
-                                     style="object-fit:cover;" />
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userMenuToggle">
-                                <li class="dropdown-item-text fw-semibold">
-                                    @currentUser?.FirstName @currentUser?.LastName
-                                </li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li>
-                                    <form asp-controller="Account" asp-action="Logout" method="post">
-                                        <button type="submit" class="dropdown-item text-danger">
-                                            Вихід
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
+                        @await Component.InvokeAsync("UserLink")
                     }
                     else
                     {

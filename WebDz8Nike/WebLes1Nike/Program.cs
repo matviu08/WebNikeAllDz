@@ -28,9 +28,20 @@ builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
 
 builder.Services.AddScoped<IImageService, ImageOptimizationService>();
 
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(option =>
+{
+    option.IdleTimeout = TimeSpan.FromMinutes(30);
+    option.Cookie.HttpOnly = true;
+    option.Cookie.IsEssential = true;
+});
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+app.UseSession();
 
 var dirName = "images";
 var dirCurrent = Directory.GetCurrentDirectory();

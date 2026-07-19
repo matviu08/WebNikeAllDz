@@ -94,11 +94,35 @@ else
                     </div>
 
                     <div class="d-grid gap-3">
-                        <a asp-controller="Cart"
-                           asp-action="Index"
-                           class="btn btn-success btn-lg rounded-pill py-3 fw-bold">
-                            Додати в кошик
-                        </a>
+                        <form asp-controller="Cart"
+                              asp-action="AddToCart"
+                              method="post">
+
+                            <input type="hidden"
+                                   name="productId"
+                                   value="@Model.Id" />
+
+                            <div class="row align-items-center g-3">
+
+                                <div class="col-auto">
+                                    <label class="form-label">Кількість</label>
+                                    <input type="number"
+                                           name="quantity"
+                                           value="1"
+                                           min="1"
+                                           class="form-control"
+                                           style="width:100px;">
+                                </div>
+
+                                <div class="col">
+                                    <button type="submit"
+                                            class="btn btn-success btn-lg w-100">
+                                        🛒 Додати в кошик
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
                         <a asp-action="ProdEdit"
                            asp-route-id="@Model.Id"
                            class="btn btn-dark btn-lg rounded-pill">
