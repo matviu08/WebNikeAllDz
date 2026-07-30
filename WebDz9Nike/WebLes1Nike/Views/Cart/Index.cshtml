@@ -1,0 +1,125 @@
+@using System.Globalization
+@model List<WebLes1Nike.Models.Cart.CartItemModel>
+
+@{
+    ViewData["Title"] = "Кошик";
+    var culture = new CultureInfo("uk-UA");
+    var totalItems = Model.Sum(x => x.Quantity);
+    var totalPrice = Model.Sum(x => x.Price * x.Quantity);
+}
+
+<div class="container py-5">
+    <h1 class="fw-bold mb-5">
+        Кошик
+    </h1>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <p class="fs-4 text-secondary mb-4">
+                Ваш кошик порожній
+            </p>
+            <a asp-controller="Products" asp-action="Index" class="btn btn-dark rounded-pill px-4">
+                Перейти до покупок
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4 g-lg-5">
+            <div class="col-12 col-lg-8">
+                @foreach (var item in Model)
+                {
+                    <div class="card border-0 shadow rounded-4 p-3 p-md-4 mb-4">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-4 col-md-3 text-center">
+                                <img src="@($"/images/{item.Image}_432.webp")"
+                                     class="img-fluid rounded-4"
+                                     style="max-height:180px;object-fit:contain;">
+                            </div>
+
+                            <div class="col-8 col-md-5">
+                                <h3 class="fw-bold fs-5 fs-md-3">
+                                    @item.Name
+                                </h3>
+                                <p class="text-secondary mb-1">
+                                    @item.CategoryName
+                                </p>
+                                <span class="badge bg-success">
+                                    В наявності
+                                </span>
+                            </div>
+
+                            <div class="col-6 col-md-2">
+                                <form method="post" class="input-group mx-auto mx-md-0" style="max-width:140px;">
+                                    <button type="submit"
+                                            asp-controller="Cart"
+                                            asp-action="DecreaseQuantity"
+                                            asp-route-productId="@item.ProductId"
+                                            class="btn btn-outline-dark px-2">
+                                        −
+                                    </button>
+                                    <input class="form-control text-center px-1"
+                                           value="@item.Quantity"
+                                           readonly>
+                                    <button type="submit"
+                                            asp-controller="Cart"
+                                            asp-action="IncreaseQuantity"
+                                            asp-route-productId="@item.ProductId"
+                                            class="btn btn-outline-dark px-2">
+                                        +
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="col-6 col-md-2 text-end">
+                                <h4 class="fw-bold fs-6 fs-md-4">
+                                    @((item.Price * item.Quantity).ToString("C", culture))
+                                </h4>
+                                <form method="post">
+                                    <button type="submit"
+                                            asp-controller="Cart"
+                                            asp-action="RemoveFromCart"
+                                            asp-route-productId="@item.ProductId"
+                                            class="btn btn-outline-danger btn-sm rounded-pill mt-2">
+                                        Видалити
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <div class="card border-0 shadow rounded-4 p-4 sticky-top"
+                     style="top:90px;">
+                    <h3 class="fw-bold mb-4">
+                        Разом
+                    </h3>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Товарів</span>
+                        <strong>@totalItems</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Доставка</span>
+                        <strong>Безкоштовно</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between fs-4 fw-bold mb-4">
+                        <span>До сплати</span>
+                        <span>@totalPrice.ToString("C", culture)</span>
+                    </div>
+                    <button class="btn btn-dark btn-lg rounded-pill mb-3">
+                        Оформити замовлення
+                    </button>
+                    <a asp-controller="Products"
+                       asp-action="Index"
+                       class="btn btn-outline-dark rounded-pill">
+                        Продовжити покупки
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
