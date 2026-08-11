@@ -17,4 +17,4 @@ public static class SessionExtensions
             ? default
             : JsonSerializer.Deserialize<T>(value);
     }
-}
+} 

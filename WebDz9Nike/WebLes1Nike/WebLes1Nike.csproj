@@ -21,5 +21,17 @@
 		<PackageReference Include="TinyMCE" Version="8.7.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Areas\Admin\" />
+	  <Folder Include="wwwroot\admin\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="Areas\Admin\Views\Products\Details.cshtml" />
+	  <AdditionalFiles Include="Areas\Admin\Views\Products\Index.cshtml" />
+	  <AdditionalFiles Include="Areas\Admin\Views\Products\ProdCreate.cshtml" />
+	  <AdditionalFiles Include="Areas\Admin\Views\Products\ProdEdit.cshtml" />
+	</ItemGroup>
+
 
 </Project>

@@ -1,0 +1,193 @@
+﻿@model ProductDetailVM
+
+@{
+    ViewData["Title"] = Model?.Name;
+    var mainImage = Model?.Images.FirstOrDefault() ?? "no-image";
+}
+
+@if (Model == null)
+{
+    <div class="container py-5 text-center">
+        <h2>Товар не знайдено</h2>
+        <a asp-action="Index" asp-controller="Products" class="btn btn-dark mt-3">
+            ← Назад
+        </a>
+    </div>
+}
+else
+{
+    <div class="container">
+        <nav class="mb-4">
+            <a asp-action="Index" asp-controller="Products" class="text-decoration-none text-secondary">
+                ← До списку товарів
+            </a>
+        </nav>
+
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-7">
+                <div class="product-image-box">
+                    <img id="mainImage"
+                         src="@($"/images/{mainImage}_1200.webp")"
+                         class="product-main-image" />
+                </div>
+
+                @if (Model.Images.Count > 1)
+                {
+                    <div class="d-flex gap-3 mt-4 flex-wrap">
+                        @for (int i = 0; i < Model.Images.Count; i++)
+                        {
+                            <img src="@($"/images/{Model.Images[i]}_1200.webp")"
+                                 class="thumb-item @(i == 0 ? "active" : "")"
+                                 data-index="@i" />
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="col-lg-5">
+
+                <div class="sticky-top" style="top:90px;">
+
+                    <span class="badge bg-dark mb-3 fs-6">
+                        @Model.CategoryName
+                    </span>
+                    <h1 class="fw-bold display-6 mb-3">
+                        @Model.Name
+                    </h1>
+                    <h2 class="fw-bold text-success mb-4">
+                        @Model.Price ₴
+                    </h2>
+
+                    <div class="bg-light rounded-4 p-4 mb-4 shadow-sm">
+                        <h5 class="fw-bold mb-3">
+                            Опис товару
+                        </h5>
+                        <p class="text-secondary mb-0"
+                           style="white-space:pre-line;">
+                            @Html.Raw(Model.Description)
+                        </p>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="border rounded-4 p-3 text-center">
+                                <div class="fw-bold">
+                                    Категорія
+                                </div>
+                                <div class="text-secondary">
+                                    @Model.CategoryName
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="border rounded-4 p-3 text-center">
+                                <div class="fw-bold">
+                                    Статус
+                                </div>
+                                <div class="text-success">
+                                    В наявності
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="d-grid gap-3">
+                        <form asp-controller="Cart"
+                              asp-action="AddToCart"
+                              method="post">
+
+                            <input type="hidden"
+                                   name="productId"
+                                   value="@Model.Id" />
+
+                            <label class="form-label fw-semibold">Кількість</label>
+                            <div class="d-flex flex-wrap gap-3">
+                                <input type="number"
+                                       name="quantity"
+                                       value="1"
+                                       min="1"
+                                       class="form-control form-control-lg rounded-pill text-center flex-shrink-0"
+                                       style="width:100px;">
+
+                                <button type="submit"
+                                        class="btn btn-success btn-lg rounded-pill flex-grow-1">
+                                    Додати в кошик
+                                </button>
+                            </div>
+                        </form>
+                        <a asp-action="ProdEdit"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-dark btn-lg rounded-pill">
+                            Редагувати товар
+                        </a>
+                        <button type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteProduct"
+                                class="btn btn-outline-danger btn-lg rounded-pill">
+                            Видалити товар
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmDeleteProduct" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Підтвердіть інформацію</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Ви дійсно бажаєте видалити товар
+                        <strong>"@Model.Name"</strong>?
+                    </p>
+                    <p class="text-danger mb-0">
+                        Після видалення відновити його буде неможливо.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+
+                    <form asp-action="ProdDelete" asp-route-id="@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">Видалити назавжди</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@* ReSharper disable once Razor.SectionNotResolved *@
+@section Scripts {
+    <script>
+        (() => {
+            const images=@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Images ?? new List<string>()));
+            if(images.length<2)
+                return;
+
+            let current=0;
+            const main=document.getElementById("mainImage");
+            const thumbs=document.querySelectorAll(".thumb-item");
+
+            function show(i){
+                current=i;
+                main.src=`/images/${images[current]}_1200.webp`;
+                thumbs.forEach((t, index) => {
+                    t.classList.toggle("active", index == current);
+                });
+            }
+
+            thumbs.forEach(t=>{
+                t.onclick=()=>{
+                    show(Number(t.dataset.index));
+                }
+            });
+        })();
+    </script>
+}

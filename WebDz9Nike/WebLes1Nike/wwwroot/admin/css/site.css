@@ -1,0 +1,27 @@
+/* Custom styles goes here */
+.img-hover-wrap {
+    position: relative;
+    overflow: hidden;
+}
+
+.img-hover-wrap .img-default,
+.img-hover-wrap .img-hover {
+    width: 100%;
+    display: block;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.img-hover-wrap .img-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+
+.img-hover-wrap:hover .img-default {
+    opacity: 0;
+}
+
+.img-hover-wrap:hover .img-hover {
+    opacity: 1;
+}
