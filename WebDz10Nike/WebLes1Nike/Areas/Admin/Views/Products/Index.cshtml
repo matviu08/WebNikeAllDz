@@ -1,0 +1,94 @@
+﻿@model List<ProductItemVM>
+
+<h1 class="fw-bold mb-4">Список товарів Nike</h1>
+
+<div class="d-flex justify-content-end mb-3">
+    <a asp-action="ProdCreate" class="btn btn-primary">
+        <i class="icon-base ri ri-add-line icon-18px me-1"></i>Додати новий товар
+    </a>
+</div>
+
+<div class="card">
+    <h5 class="card-header">Товари (@Model.Count)</h5>
+    <div class="table-responsive text-nowrap">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Фото</th>
+                    <th>Назва</th>
+                    <th>Категорія</th>
+                    <th>Ціна</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                @foreach (var prod in Model)
+                {
+                    <tr>
+                        <td>@prod.Id</td>
+                        <td>
+                            @{
+                                var thumb = prod.Images.FirstOrDefault();
+                            }
+                            @if (!string.IsNullOrEmpty(thumb))
+                            {
+                                <img src="/images/@(thumb)_64.webp"
+                                     class="rounded"
+                                     width="48" height="48"
+                                     style="object-fit: cover;"
+                                     alt="@prod.Name">
+                            }
+                            else
+                            {
+                                <div class="rounded bg-label-secondary d-flex align-items-center justify-content-center"
+                                     style="width:48px;height:48px;">
+                                    <i class="icon-base ri ri-image-line icon-20px"></i>
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            <span class="fw-medium">@prod.Name</span>
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill bg-label-dark">@prod.CategoryName</span>
+                        </td>
+                        <td>@prod.Price</td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button"
+                                        class="btn p-0 dropdown-toggle hide-arrow shadow-none"
+                                        data-bs-toggle="dropdown"
+                                        aria-label="Дії з товаром">
+                                    <i class="icon-base ri ri-more-2-line icon-18px"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a class="dropdown-item" asp-action="Details" asp-route-id="@prod.Id">
+                                        <i class="icon-base ri ri-eye-line icon-18px me-1"></i>Переглянути
+                                    </a>
+                                    <a class="dropdown-item" asp-action="ProdEdit" asp-route-id="@prod.Id">
+                                        <i class="icon-base ri ri-pencil-line icon-18px me-1"></i>Редагувати
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <form asp-action="ProdDelete" asp-route-id="@prod.Id" method="post" class="m-0">
+                                        <button type="submit"
+                                                class="dropdown-item text-danger"
+                                                onclick="return confirm('Ви впевнені, що хочете видалити цей товар?');">
+                                            <i class="icon-base ri ri-delete-bin-6-line icon-18px me-1"></i>Видалити
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Товарів поки немає</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
