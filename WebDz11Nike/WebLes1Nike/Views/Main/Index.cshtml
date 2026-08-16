@@ -3,7 +3,7 @@
 
 <h1 class="text-center mb-5 fw-bold">Категорії товарів Nike</h1>
 
-<a asp-action="Create" class="btn btn-secondary mb-3">Додати нову категорію</a>
+@*<a asp-action="Create" class="btn btn-secondary mb-3">Додати нову категорію</a>*@
 
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 
@@ -12,7 +12,7 @@
         var modalId = $"confirmDelete{cat.Id}";
         <div class="col">
             <div class="card h-100 shadow-sm category-card border-0">
-                <img src="/images/@($"{cat.Image}_432.webp")" class="card-img-top category-img" alt="@cat.Name">
+                <img src="/myimages/@($"{cat.Image}_432.webp")" class="card-img-top category-img" alt="@cat.Name">
                 <div class="card-body d-flex flex-column text-center">
                     <h3 class="card-title mb-2">@cat.Name</h3>
                     <h5 class="form-text mb-4">@cat.Slug</h5>
@@ -21,20 +21,20 @@
                         Переглянути
                     </a>
 
-                    <a asp-action="Edit" asp-route-id="@cat.Id" class="btn btn-outline-primary w-100 mb-2">
+                    @*<a asp-action="Edit" asp-route-id="@cat.Id" class="btn btn-outline-primary w-100 mb-2">
                         Редагувати
-                    </a>
+                    </a>*@
 
-                    <button type="button"
+                    @*<button type="button"
                             data-bs-toggle="modal" data-bs-target="#@modalId"
                             class="btn btn-danger w-100">
                         Видалити
-                    </button>
+                    </button>*@
                 </div>
             </div>
         </div>
 
-        <div class="modal fade" id="@modalId" tabindex="-1" aria-hidden="true">
+        @*<div class="modal fade" id="@modalId" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -62,6 +62,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>*@
     }
 </div>

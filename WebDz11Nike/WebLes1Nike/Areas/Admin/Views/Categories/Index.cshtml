@@ -1,0 +1,113 @@
+@model List<CategoryItemVM>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<h1 class="fw-bold mb-4">Категорії товарів</h1>
+
+<div class="d-flex justify-content-end mb-3">
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="icon-base ri ri-add-line icon-18px me-1"></i>Додати категорію
+    </a>
+</div>
+
+<div class="card">
+    <h5 class="card-header">Категорії (@Model.Count)</h5>
+    <div class="table-responsive text-nowrap">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Фото</th>
+                    <th>Назва</th>
+                    <th>Slug</th>
+                    <th>Товарів</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                @foreach (var cat in Model)
+                {
+                    <tr>
+                        <td>@cat.Id</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(cat.Image) && cat.Image != "default")
+                            {
+                                <img src="/myimages/@(cat.Image)_64.webp"
+                                     class="rounded"
+                                     width="48" height="48"
+                                     style="object-fit: cover;"
+                                     alt="@cat.Name">
+                            }
+                            else
+                            {
+                                <div class="rounded bg-label-secondary d-flex align-items-center justify-content-center"
+                                     style="width:48px;height:48px;">
+                                    <i class="icon-base ri ri-image-line icon-20px"></i>
+                                </div>
+                            }
+                        </td>
+                        <td><span class="fw-medium">@cat.Name</span></td>
+                        <td><span class="text-muted">@cat.Slug</span></td>
+                        <td>
+                            <span class="badge rounded-pill @(cat.ProductsCount > 0 ? "bg-label-primary" : "bg-label-secondary")">
+                                @cat.ProductsCount
+                            </span>
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button"
+                                        class="btn p-0 dropdown-toggle hide-arrow shadow-none"
+                                        data-bs-toggle="dropdown"
+                                        aria-label="Дії з категорією">
+                                    <i class="icon-base ri ri-more-2-line icon-18px"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@cat.Id">
+                                        <i class="icon-base ri ri-pencil-line icon-18px me-1"></i>Редагувати
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    @if (cat.ProductsCount > 0)
+                                    {
+                                        <span class="dropdown-item disabled text-muted"
+                                              title="Спочатку перенесіть або видаліть товари цієї категорії">
+                                            <i class="icon-base ri ri-delete-bin-6-line icon-18px me-1"></i>Видалити
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@cat.Id" method="post" class="m-0">
+                                            <button type="submit"
+                                                    class="dropdown-item text-danger"
+                                                    onclick="return confirm('Ви впевнені, що хочете видалити цю категорію?');">
+                                                <i class="icon-base ri ri-delete-bin-6-line icon-18px me-1"></i>Видалити
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Категорій поки немає</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

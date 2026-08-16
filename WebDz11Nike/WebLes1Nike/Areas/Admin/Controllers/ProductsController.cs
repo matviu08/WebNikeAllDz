@@ -123,7 +123,7 @@ namespace WebLes1Nike.Areas.Admin.Controllers
                     }).ToList()
             };
 
-            ViewBag.Categories = nikeDbContext.Categories.Select(x => x.Name).ToList();
+            ViewBag.Categories = nikeDbContext.Categories.Where(x => !x.isDeleted).Select(x => x.Name).ToList();
             return View(model);
         }
 
@@ -132,7 +132,7 @@ namespace WebLes1Nike.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = nikeDbContext.Categories.Select(x => x.Name).ToList();
+                ViewBag.Categories = nikeDbContext.Categories.Where(x => !x.isDeleted).Select(x => x.Name).ToList();
                 return View(model);
             }
             var product = nikeDbContext.Products
@@ -146,7 +146,7 @@ namespace WebLes1Nike.Areas.Admin.Controllers
             if (cat == null)
             {
                 ModelState.AddModelError(nameof(model.CategoryName), "Обрана категорія не знайдена");
-                ViewBag.Categories = nikeDbContext.Categories.Select(x => x.Name).ToList();
+                ViewBag.Categories = nikeDbContext.Categories.Where(x => !x.isDeleted).Select(x => x.Name).ToList();
                 return View(model);
             }
             string priceStr = model.Price.ToString().Trim().Replace('.', ',');

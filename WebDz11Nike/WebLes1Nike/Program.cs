@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using WebHike.Services;
 using WebLes1Nike.Constants;
 using WebLes1Nike.Data;
@@ -47,6 +48,23 @@ var dirName = "images";
 var dirCurrent = Directory.GetCurrentDirectory();
 var path = Path.Combine(dirCurrent, "wwwroot", dirName);
 Directory.CreateDirectory(path);
+
+try
+{
+    var myImage = "myimages";
+    path = Path.Combine(dirCurrent, myImage);
+    Directory.CreateDirectory(path); //автоматично стоврить images
+
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(path),
+        RequestPath = $"/{myImage}"
+    });
+}
+catch(Exception ex)
+{
+    Console.WriteLine("Помилка запуску" + ex.Message);
+}
 
 if (!app.Environment.IsDevelopment())
 {

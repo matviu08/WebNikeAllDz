@@ -1,0 +1,82 @@
+@model CategoryEditVM
+
+<h1 class="text-center mb-5 fw-bold">Редагувати категорію</h1>
+<div class="row">
+    <form asp-action="Edit" id="editCategoryForm" method="post" enctype="multipart/form-data" class="col-md-8 offset-md-2">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" id="Name">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Slug" class="form-label"></label>
+            <input asp-for="Slug" class="form-control" id="Slug">
+            <span asp-validation-for="Slug" class="text-danger"></span>
+            <div class="form-text">Зміна Slug змінить URL категорії — редагуйте обережно.</div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.CurrentImage) && Model.CurrentImage != "default")
+        {
+            <div class="mb-3">
+                <label class="form-label d-block">Поточне фото</label>
+                <img src="/myimages/@(Model.CurrentImage)_432.webp"
+                     class="rounded border"
+                     style="width:120px;height:120px;object-fit:cover;"
+                     alt="@Model.Name">
+            </div>
+        }
+
+        <div class="mb-3">
+            <label asp-for="Image" class="form-label"></label>
+            <input asp-for="Image" class="form-control" type="file" accept="image/*" id="imageInput">
+            <span asp-validation-for="Image" class="text-danger"></span>
+            <div class="form-text">Залиште порожнім, щоб не змінювати фото.</div>
+        </div>
+
+        <div id="imagePreviewWrap" class="mb-3 d-none">
+            <label class="form-label d-block">Нове фото</label>
+            <img id="imagePreview" class="rounded border" style="width:120px;height:120px;object-fit:cover;">
+        </div>
+
+        <a asp-action="Index" class="btn btn-label-secondary">Скасувати</a>
+        <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+    </form>
+</div>
+
+@section PageScripts {
+    <script src="https://cdn.jsdelivr.net/npm/slugify@1.6.9/slugify.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const nameInput = document.getElementById("Name");
+            const slugInput = document.getElementById("Slug");
+            nameInput.addEventListener("input", () => {
+                slugInput.value = slugify(nameInput.value, {
+                    lower: true,
+                    strict: true,
+                    trim: true
+                });
+            });
+
+            const imageInput = document.getElementById("imageInput");
+            const previewWrap = document.getElementById("imagePreviewWrap");
+            const preview = document.getElementById("imagePreview");
+            imageInput.addEventListener("change", () => {
+                const file = imageInput.files[0];
+                if (!file) {
+                    previewWrap.classList.add("d-none");
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    previewWrap.classList.remove("d-none");
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+}
