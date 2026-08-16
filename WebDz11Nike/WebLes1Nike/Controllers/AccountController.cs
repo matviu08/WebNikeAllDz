@@ -66,8 +66,7 @@ namespace WebLes1Nike.Controllers
             };
             if (model.Image != null)
             {
-                string folderPath = Path.Combine(Directory.GetCurrentDirectory() ,"wwwroot", "images");
-                var fileName = await imageService.SaveOptimizedImageAsync(model.Image, folderPath);
+                var fileName = await imageService.SaveOptimizedImageAsync(model.Image);
                 user.Image = fileName;
             }
             

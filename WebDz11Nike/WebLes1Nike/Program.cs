@@ -44,21 +44,22 @@ var app = builder.Build();
 
 app.UseSession();
 
-var dirName = "images";
-var dirCurrent = Directory.GetCurrentDirectory();
-var path = Path.Combine(dirCurrent, "wwwroot", dirName);
-Directory.CreateDirectory(path);
+//  var dirName = "images";
+// var dirCurrent = Directory.GetCurrentDirectory();
+// var path = Path.Combine(dirCurrent, "wwwroot", dirName);
+// Directory.CreateDirectory(path);
 
 try
 {
-    var myImage = "myimages";
-    path = Path.Combine(dirCurrent, myImage);
-    Directory.CreateDirectory(path); //автоматично стоврить images
+    Console.WriteLine("myImages "+ builder.Configuration.GetRequiredSection("imagesDir").Get<string>() ?? "myimages");
+    string imagesDir = builder.Configuration.GetRequiredSection("ImagesDir").Get<string>() ?? "myimages";
+    string path = Path.Combine(Directory.GetCurrentDirectory(), imagesDir);
+    Directory.CreateDirectory(path);
 
     app.UseStaticFiles(new StaticFileOptions
     {
         FileProvider = new PhysicalFileProvider(path),
-        RequestPath = $"/{myImage}"
+        RequestPath = $"/{imagesDir}"
     });
 }
 catch(Exception ex)
@@ -103,6 +104,9 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var roleManger = services.GetRequiredService<RoleManager<RoleEntity>>();
     var userManger = services.GetRequiredService<UserManager<UserEntity>>();
+    var dbContext = services.GetRequiredService<NikeDbContext>();
+    
+    await dbContext.Database.MigrateAsync();
     
     if (!roleManger.Roles.Any())
     {

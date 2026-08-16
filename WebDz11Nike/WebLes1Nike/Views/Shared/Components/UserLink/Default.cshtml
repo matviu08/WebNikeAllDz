@@ -1,5 +1,8 @@
 @using WebLes1Nike.Models.Account;
 @model UserLinkViewModel
+@{
+    var imagesDir = Configuration.GetRequiredSection("ImagesDir").Get<string>() ?? "myimages";
+}
 
 <div class="dropdown">
     <a href="#"
@@ -9,7 +12,7 @@
        data-bs-toggle="dropdown"
        aria-expanded="false">
         <img src="@Model.Image"
-             onerror="this.onerror=null;this.src='/images/default.jpg';"
+             onerror="this.onerror=null;this.src='/@imagesDir/default.jpg';"
              alt="@Model.Name"
              class="rounded-circle border border-secondary profile-hover-effect"
              width="40" height="40"

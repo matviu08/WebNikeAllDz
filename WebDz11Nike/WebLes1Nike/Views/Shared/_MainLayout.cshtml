@@ -1,10 +1,14 @@
-﻿@inject UserManager<UserEntity> UserManager
+﻿@using WebLes1Nike.Constants
+@inject UserManager<UserEntity> UserManager
 @{
     UserEntity? currentUser = null;
     if (User.Identity?.IsAuthenticated == true)
     {
         currentUser = await UserManager.GetUserAsync(User);
     }
+}
+@{
+    string imagesDir = Configuration.GetRequiredSection("ImagesDir").Get<string>() ?? "myimages";
 }
 
 <!DOCTYPE html>
@@ -13,6 +17,9 @@
     <title>Nike store</title>
     <link href="/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
+    <script>
+    window.IMAGES_BASE = '/@imagesDir';
+    </script>
 </head>
 <body>
     <header data-bs-theme="dark">
@@ -44,9 +51,19 @@
                         <li class="nav-item">
                             <a class="nav-link active" asp-action="Index" asp-controller="Products">Товари</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                        </li>
+                        @if (User.IsInRole(Roles.Admin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link active" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                            </li>
+                        }
+                        
                     </ul>
                     <form class="d-flex me-3">
                         <input class="form-control rounded-pill"

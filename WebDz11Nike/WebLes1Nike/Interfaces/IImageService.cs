@@ -8,11 +8,10 @@
         /// у JPEG зі зменшеною шириною та заданою якістю стиснення.
         /// </summary>
         /// <param name="file">Файл, переданий користувачем (IFormFile)</param>
-        /// <param name="folderPath">Абсолютний шлях до папки, куди зберігати (напр. wwwroot/images)</param>
         /// <returns>Ім'я збереженого файлу (без шляху)</returns>
-        Task<string> SaveOptimizedImageAsync(IFormFile file, string folderPath);
-        Task<string> SaveOptimizedImageAsync(string base64Image, string folderPath);
-        Task RemoveImageAsync(string imageName, string folderPath);
+        Task<string> SaveOptimizedImageAsync(IFormFile file);
+        Task<string> SaveOptimizedImageAsync(string base64Image);
+        Task RemoveImageAsync(string imageName);
 
     }
 }

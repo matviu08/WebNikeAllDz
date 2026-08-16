@@ -2,6 +2,9 @@
   @* Compact/Fluid class *@
   ViewData["contentType"] = ViewData["container"] is string container && container == "container-xxl" ? "layout-compact layout-menu-fixed" : "";
 }
+@{
+  string imagesDir = Configuration.GetRequiredSection("ImagesDir").Get<string>() ?? "myimages";
+}
 
 @inject IHttpContextAccessor httpContextAccessor
 
@@ -42,6 +45,9 @@
 
   <!-- Include Scripts for customizer, helper, analytics, config -->
   @await Html.PartialAsync("Sections/_ScriptsIncludes")
+  <script>
+      window.IMAGES_BASE = '/@imagesDir';
+  </script>
 </head>
 
 <body>

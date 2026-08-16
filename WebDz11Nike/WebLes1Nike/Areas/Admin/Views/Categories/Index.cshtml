@@ -1,4 +1,7 @@
 @model List<CategoryItemVM>
+@{
+    var imagesDir = Configuration.GetRequiredSection("ImagesDir").Get<string>() ?? "myimages";
+}
 
 @if (TempData["Success"] != null)
 {
@@ -45,7 +48,7 @@
                         <td>
                             @if (!string.IsNullOrEmpty(cat.Image) && cat.Image != "default")
                             {
-                                <img src="/myimages/@(cat.Image)_64.webp"
+                                <img src="/@imagesDir/@(cat.Image)_64.webp"
                                      class="rounded"
                                      width="48" height="48"
                                      style="object-fit: cover;"

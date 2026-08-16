@@ -1,4 +1,7 @@
 ﻿@model List<ProductItemVM>
+@{
+    var imagesDir = Configuration.GetRequiredSection("ImagesDir").Get<string>() ?? "myimages";
+}
 
 <h1 class="fw-bold mb-4">Список товарів Nike</h1>
 
@@ -33,7 +36,7 @@
                             }
                             @if (!string.IsNullOrEmpty(thumb))
                             {
-                                <img src="/images/@(thumb)_64.webp"
+                                <img src="/@imagesDir/@(thumb)_64.webp"
                                      class="rounded"
                                      width="48" height="48"
                                      style="object-fit: cover;"

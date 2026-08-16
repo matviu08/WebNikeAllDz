@@ -1,5 +1,7 @@
 ﻿@model ProductDetailViewModel
-
+@{
+    var imagesDir = Configuration.GetRequiredSection("ImagesDir").Get<string>() ?? "myimages";
+}
 @{
     ViewData["Title"] = Model?.Name;
     var mainImage = Model?.Images.FirstOrDefault() ?? "no-image";
@@ -27,7 +29,7 @@ else
             <div class="col-lg-7">
                 <div class="product-image-box">
                     <img id="mainImage"
-                         src="@($"/images/{mainImage}_1200.webp")"
+                         src="@($"/{imagesDir}/{mainImage}_1200.webp")"
                          class="product-main-image" />
                 </div>
 
@@ -36,7 +38,7 @@ else
                     <div class="d-flex gap-3 mt-4 flex-wrap">
                         @for (int i = 0; i < Model.Images.Count; i++)
                         {
-                            <img src="@($"/images/{Model.Images[i]}_1200.webp")"
+                            <img src="@($"/{imagesDir}/{Model.Images[i]}_1200.webp")"
                                  class="thumb-item @(i == 0 ? "active" : "")"
                                  data-index="@i" />
                         }
@@ -176,7 +178,7 @@ else
 
             function show(i){
                 current=i;
-                main.src=`/images/${images[current]}_1200.webp`;
+                main.src = `${window.IMAGES_BASE}/${images[i]}_1200.webp`;
                 thumbs.forEach((t, index) => {
                     t.classList.toggle("active", index == current);
                 });

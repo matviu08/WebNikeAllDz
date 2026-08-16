@@ -1,4 +1,7 @@
 @model CategoryEditVM
+@{
+    var imagesDir = Configuration.GetRequiredSection("ImagesDir").Get<string>() ?? "myimages";
+}
 
 <h1 class="text-center mb-5 fw-bold">Редагувати категорію</h1>
 <div class="row">
@@ -23,7 +26,7 @@
         {
             <div class="mb-3">
                 <label class="form-label d-block">Поточне фото</label>
-                <img src="/myimages/@(Model.CurrentImage)_432.webp"
+                <img src="/@imagesDir/@(Model.CurrentImage)_432.webp"
                      class="rounded border"
                      style="width:120px;height:120px;object-fit:cover;"
                      alt="@Model.Name">

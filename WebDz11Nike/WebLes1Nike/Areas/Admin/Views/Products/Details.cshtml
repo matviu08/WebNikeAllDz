@@ -1,5 +1,7 @@
 ﻿@model ProductDetailVM
-
+@{
+    var imagesDir = Configuration.GetRequiredSection("ImagesDir").Get<string>() ?? "myimages";
+}
 @{
 ViewData["Title"] = Model?.Name;
 var hasImages = Model != null && Model.Images.Count > 0;
@@ -50,7 +52,7 @@ else
                     @if (hasImages)
                     {
                     <img id="mainImage"
-                         src="/images/@(mainImage)_1200.webp"
+                         src="/@imagesDir/@(mainImage)_1200.webp"
                          class="w-100 h-100"
                          style="object-fit: cover;"
                          alt="@Model.Name" />
@@ -66,7 +68,7 @@ else
                 <div class="d-flex gap-2 flex-wrap">
                     @for (int i = 0; i < Model.Images.Count; i++)
                     {
-                    <img src="/images/@(Model.Images[i])_432.webp"
+                    <img src="/@imagesDir/@(Model.Images[i])_432.webp"
                          class="thumb-item rounded border @(i == 0 ? "border-primary border-2" : "")"
                          data-index="@i"
                          style="width: 64px; height: 64px; object-fit: cover; cursor: pointer;"
@@ -160,7 +162,7 @@ else
         const thumbs = document.querySelectorAll(".thumb-item");
 
         function show(i) {
-            main.src = `/images/${images[i]}_1200.webp`;
+            main.src = `${window.IMAGES_BASE}/${images[i]}_1200.webp`;
             thumbs.forEach((t, index) => {
                 t.classList.toggle("border-primary", index === i);
                 t.classList.toggle("border-2", index === i);

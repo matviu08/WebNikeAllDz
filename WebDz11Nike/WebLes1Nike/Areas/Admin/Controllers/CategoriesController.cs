@@ -61,8 +61,7 @@ namespace WebLes1Nike.Areas.Admin.Controllers
 
             if (model.Image != null)
             {
-                var saveDirectory = Path.Combine(Directory.GetCurrentDirectory(), "myimages");
-                category.Image = await imageService.SaveOptimizedImageAsync(model.Image, saveDirectory);
+                category.Image = await imageService.SaveOptimizedImageAsync(model.Image);
             }
 
             nikeDbContext.Categories.Add(category);
@@ -121,13 +120,12 @@ namespace WebLes1Nike.Areas.Admin.Controllers
 
             if (model.Image != null)
             {
-                var saveDirectory = Path.Combine(Directory.GetCurrentDirectory(), "myimages");
                 if (!string.IsNullOrEmpty(category.Image) && category.Image != "default")
                 {
-                    await imageService.RemoveImageAsync(category.Image, saveDirectory);
+                    await imageService.RemoveImageAsync(category.Image);
                 }
 
-                category.Image = await imageService.SaveOptimizedImageAsync(model.Image, saveDirectory);
+                category.Image = await imageService.SaveOptimizedImageAsync(model.Image);
             }
 
             await nikeDbContext.SaveChangesAsync();
@@ -159,7 +157,7 @@ namespace WebLes1Nike.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(category.Image) && category.Image != "default")
             {
                 var saveDirectory = Path.Combine(Directory.GetCurrentDirectory(), "myimages");
-                await imageService.RemoveImageAsync(category.Image, saveDirectory);
+                await imageService.RemoveImageAsync(category.Image);
             }
 
             category.isDeleted = true;

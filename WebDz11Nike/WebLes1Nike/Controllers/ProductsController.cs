@@ -50,12 +50,11 @@ namespace WebLes1Nike.Controllers
                     Price = price,
                     Slug = model.Slug,
                 };
-                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
                 var savedImages = await Task.WhenAll(
                     model.Images.Select(async image => new ProductImageEntity
                     {
-                        Name = await imageService.SaveOptimizedImageAsync(image.Base64Image, folderPath),
+                        Name = await imageService.SaveOptimizedImageAsync(image.Base64Image),
                         Order = image.Order
                     }));
                 entity.ProductImages = savedImages.ToList();
@@ -152,12 +151,11 @@ namespace WebLes1Nike.Controllers
             product.Slug = model.Slug;
             product.CategoryId = cat.Id;
 
-            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
             var keptIds = model.ExistingImages.Select(x => x.Id).ToHashSet();
             var imagesToRemove = product.ProductImages.Where(x => !keptIds.Contains(x.Id)).ToList();
             foreach (var img in imagesToRemove)
             {
-                await imageService.RemoveImageAsync(img.Name, folderPath);
+                await imageService.RemoveImageAsync(img.Name);
                 nikeDbContext.ProductImages.Remove(img);
             }
 
@@ -175,7 +173,7 @@ namespace WebLes1Nike.Controllers
                 var savedImages = await Task.WhenAll(
                     model.NewImages.Select(async image => new ProductImageEntity
                     {
-                        Name = await imageService.SaveOptimizedImageAsync(image.Base64Image, folderPath),
+                        Name = await imageService.SaveOptimizedImageAsync(image.Base64Image),
                         Order = image.Order,
                         ProductId = product.Id
                     }));
@@ -199,10 +197,9 @@ namespace WebLes1Nike.Controllers
             {
                 return NotFound();
             }
-            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
             foreach (var img in product.ProductImages)
             {
-                await imageService.RemoveImageAsync(img.Name, folderPath);
+                await imageService.RemoveImageAsync(img.Name);
             }
             nikeDbContext.ProductImages.RemoveRange(product.ProductImages);
             nikeDbContext.Products.Remove(product);
