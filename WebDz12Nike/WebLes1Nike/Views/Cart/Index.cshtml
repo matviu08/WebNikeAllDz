@@ -1,6 +1,8 @@
 @using System.Globalization
 @model List<WebLes1Nike.Models.Cart.CartItemModel>
-
+@{
+    var imagesDir = Configuration.GetRequiredSection("ImagesDir").Get<string>() ?? "myimages";
+}
 @{
     ViewData["Title"] = "Кошик";
     var culture = new CultureInfo("uk-UA");
@@ -33,7 +35,7 @@
                     <div class="card border-0 shadow rounded-4 p-3 p-md-4 mb-4">
                         <div class="row g-3 align-items-center">
                             <div class="col-4 col-md-3 text-center">
-                                <img src="@($"/images/{item.Image}_432.webp")"
+                                <img src="@($"/{imagesDir}/{item.Image}_432.webp")"
                                      class="img-fluid rounded-4"
                                      style="max-height:180px;object-fit:contain;">
                             </div>

@@ -119,24 +119,24 @@ else
                                 </button>
                             </div>
                         </form>
-                        <a asp-action="ProdEdit"
+                        @*<a asp-action="ProdEdit"
                            asp-route-id="@Model.Id"
                            class="btn btn-dark btn-lg rounded-pill">
                             Редагувати товар
-                        </a>
-                        <button type="button"
+                        </a>*@
+                        @*<button type="button"
                                 data-bs-toggle="modal"
                                 data-bs-target="#confirmDeleteProduct"
                                 class="btn btn-outline-danger btn-lg rounded-pill">
                             Видалити товар
-                        </button>
+                        </button>*@
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="confirmDeleteProduct" tabindex="-1" aria-hidden="true">
+    @*<div class="modal fade" id="confirmDeleteProduct" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -162,7 +162,7 @@ else
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
 }
 
 @section Scripts {
